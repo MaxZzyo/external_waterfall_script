@@ -99,7 +99,7 @@
         // 瀑布流脚本
         waterfallScrollInit: function () {
             var w = new thirdparty.waterfall({});
-            var $pages = $('.row .row>div');
+            var $pages = $('.row .row > div');
             if ($pages.length) {
                 $pages[0].parentElement.parentElement.id = "waterfall_h";
                 w = new thirdparty.waterfall({
@@ -229,7 +229,22 @@
                 this.anchor = $(this.selector.pagi)[0];
                 this._count = 0;
                 this._1func = function (cont, elems) {
-                    cont.empty().append(elems);
+//                    cont.empty().append(elems);
+//                    console.warn(cont)
+                    let old_elems = cont[0].children;
+                    let old_keys = [];
+                    for(const elem of old_elems){
+                        const viewkey = elem.querySelector("a").href.split("viewkey=")[1].split("&")[0];
+                        old_keys.push(viewkey);
+                    }
+                    let new_elems = []
+                    for(const elem of elems) {
+                        const viewkey = elem.querySelector("a").href.split("viewkey=")[1].split("&")[0];
+                        if(old_keys.indexOf(viewkey)==-1){
+                            new_elems.push(elem)
+                        }
+                    }
+                    cont.append(new_elems);
                 };
                 this._2func = function (cont, elems) {
                     cont.append(elems);
@@ -242,7 +257,7 @@
                         document.addEventListener('scroll', this.scroll.bind(this));
                         document.addEventListener('wheel', this.wheel.bind(this));
                     }
-                    this.appendElems(this._1func);
+                    this.appendElems(this._2func);
                 }
             }
 
